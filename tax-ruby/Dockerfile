@@ -2,7 +2,7 @@ FROM ruby:3.2-alpine AS base
 ENV APP_HOME=/app
 WORKDIR $APP_HOME
 
-RUN apk add --no-cache build-base
+RUN apk add --no-cache build-base curl
 
 COPY Gemfile* ./
 RUN bundle install --jobs 4 --retry 3
