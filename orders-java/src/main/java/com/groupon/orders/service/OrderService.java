@@ -28,7 +28,7 @@ public class OrderService {
             taxPayload.put("amount", request.getAmount());
             taxPayload.put("currency", request.getCurrency());
             taxPayload.put("userId", request.getUserId());
-            ResponseEntity<Map> response = restTemplate.postForEntity(taxServiceUrl, taxPayload, Map.class);
+            ResponseEntity<Map> response = restTemplate.postForEntity(taxServiceUrl + "/tax/calc", taxPayload, Map.class);
             taxAmount = (Double) response.getBody().get("taxAmount");
         } catch (Exception e) {
             // Fallback tax logic
