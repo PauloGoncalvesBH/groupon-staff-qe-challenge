@@ -40,6 +40,17 @@ curl -X POST http://localhost:8080/orders \
   }'
 ```
 
+## Contract test (orders-java)
+
+- Pact files are written under the repository root in `./pacts/`.
+- The provider verification step (to be added) will mount and read from this directory.
+
+Build and run the contract test:
+
+```bash
+docker compose run --rm orders-contract-tests
+```
+
 ### Debugging Redpanda/Kafka
 
 Shows all topics, partitions, and replicas:

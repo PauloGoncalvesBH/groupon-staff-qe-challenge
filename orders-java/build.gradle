@@ -17,8 +17,33 @@ dependencies {
     implementation 'org.springframework.kafka:spring-kafka'
     implementation 'org.springframework.boot:spring-boot-starter-actuator'
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
+    testImplementation 'au.com.dius.pact.consumer:junit5:4.6.15'
+}
+
+tasks.withType(Test).configureEach {
+    testLogging {
+        events 'passed', 'skipped', 'failed', 'standardOut', 'standardError'
+        exceptionFormat 'full'
+        showStandardStreams = true
+    }
 }
 
 tasks.named('test') {
-    useJUnitPlatform()
+    systemProperty 'pact.rootDir', new File(project.rootProject.projectDir.parentFile, 'pacts').absolutePath
+    systemProperty 'pact.writer.overwrite', 'true'
+}
+
+tasks.register('contractTest', Test) {
+    description = 'Runs contract tests only'
+    group = 'verification'
+    useJUnitPlatform {
+        includeTags 'contract'
+    }
+    systemProperty 'pact.rootDir', new File(project.rootProject.projectDir.parentFile, 'pacts').absolutePath
+    systemProperty 'pact.writer.overwrite', 'true'
+    // systemProperty 'pact.logLevel', 'DEBUG'
+    testClassesDirs = sourceSets.test.output.classesDirs
+    classpath = sourceSets.test.runtimeClasspath
+    // Always run to regenerate pact files (avoid Gradle up-to-date skipping)
+    outputs.upToDateWhen { false }
 }

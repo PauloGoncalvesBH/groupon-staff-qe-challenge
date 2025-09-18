@@ -3,8 +3,8 @@
 
 > Staff Automation (QE) Backend - Groupon
 
-- /orders-java/ - Orders Service (Java - Spring Boot)
-- /tax-ruby/ - Tax Service (Ruby - Sinatra)
+- /orders-java/ - Orders Service (Java - Spring Boot) Consumer
+- /tax-ruby/ - Tax Service (Ruby - Sinatra) Provider
 - /docs/ - Documentation and diagrams
 
 ## How to Run Orders Service
@@ -45,7 +45,7 @@ docker-compose down
 
 ### Environment Variables
 - `KAFKA_BOOTSTRAP_SERVERS`: Kafka/Redpanda bootstrap servers (default: `redpanda:9092`)
-- `TAX_SERVICE_URL`: URL for Tax service (default: `http://tax:4567/tax/calc`)
+- `TAX_SERVICE_URL`: Base URL for Tax service (default: `http://tax:4567`). The Orders service appends `/tax/calc` when calling it.
 
 ---
 
@@ -73,3 +73,24 @@ sequenceDiagram
 - Kafka/Redpanda for messaging
 - Testcontainers or docker-compose for integration tests
 - GitHub Actions for CI/CD
+
+---
+
+## Contract tests (Pact)
+
+Orders (consumer) has Pact tests describing its contract with Tax (provider):
+
+- Happy path: valid request -> 200 with `taxAmount`.
+- Non-breaking change: provider returns an extra field the consumer ignores.
+
+> Broker is not required; pact files are written locally to the repo root under `./pacts/`.
+
+### Run consumer Pact tests (orders-java)
+
+Generate pact files using Docker Compose:
+
+```bash
+docker compose run --rm orders-contract-tests
+```
+
+These pact files will be used later to verify the Ruby provider.

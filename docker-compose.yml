@@ -14,6 +14,16 @@ services:
     networks:
       - internal
 
+  orders-contract-tests:
+    image: gradle:8.5-jdk21
+    working_dir: /workspace/orders-java
+    command: gradle contractTest --no-daemon
+    environment:
+      - PACT_DO_NOT_TRACK=true
+    volumes:
+      - ./:/workspace
+      - ${HOME}/.gradle:/home/gradle/.gradle
+
   redpanda:
     image: redpandadata/redpanda:v25.2.4
     command:
