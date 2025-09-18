@@ -18,7 +18,14 @@ public class OrderService {
     @Autowired
     private PaymentPublisher paymentPublisher;
 
-    private final RestTemplate restTemplate = new RestTemplate();
+    private final RestTemplate restTemplate;
+
+    public OrderService() {
+        var factory = new org.springframework.http.client.SimpleClientHttpRequestFactory();
+        factory.setConnectTimeout(3000);
+        factory.setReadTimeout(3000); 
+        this.restTemplate = new RestTemplate(factory);
+    }
 
     public Map<String, Object> processOrder(OrderRequest request) {
         Double taxAmount = null;
