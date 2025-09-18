@@ -6,9 +6,10 @@ services:
       - "8080:8080"
     environment:
       - KAFKA_BOOTSTRAP_SERVERS=redpanda:9092
-      - TAX_SERVICE_URL=http://tax:4567/tax/calc
+      - TAX_SERVICE_URL=http://tax:4567
     depends_on:
       - redpanda
+      - tax
     networks:
       - internal
 
@@ -38,6 +39,18 @@ services:
       - redpanda:33145
     expose:
       - "9092"
+    networks:
+      - internal
+
+  tax:
+    build: ./tax-ruby
+    expose:
+      - "4567"
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:4567/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
     networks:
       - internal
 

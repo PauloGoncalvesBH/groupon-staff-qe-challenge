@@ -2,6 +2,13 @@
 # Miscellaneous
 challenge-checklist.md
 
-# Gradle
+# Java
 .gradle/
 build/
+
+# Ruby
+.bundle/
+log/
+tmp/
+coverage/
+*.log
