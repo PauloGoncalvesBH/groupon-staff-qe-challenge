@@ -12,6 +12,9 @@ public class PaymentPublisher {
     @Value("${KAFKA_BOOTSTRAP_SERVERS:redpanda:9092}")
     private String kafkaBootstrapServers;
 
+    @Value("${PAYMENT_PROVIDER:stubbed}")
+    private String paymentProvider;
+
     private final KafkaTemplate<String, Object> kafkaTemplate;
 
     public PaymentPublisher(KafkaTemplate<String, Object> kafkaTemplate) {
@@ -22,7 +25,7 @@ public class PaymentPublisher {
         Map<String, Object> event = new HashMap<>();
         event.put("orderId", orderId);
         event.put("status", status);
-        event.put("provider", "stubbed");
+        event.put("provider", paymentProvider);
         event.put("occurredAt", Instant.now().toString());
         kafkaTemplate.send("payments.status.updated", orderId, event);
     }
