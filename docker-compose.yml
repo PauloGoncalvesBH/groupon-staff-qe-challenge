@@ -1,0 +1,46 @@
+
+services:
+  orders:
+    build: ./orders-java
+    ports:
+      - "8080:8080"
+    environment:
+      - KAFKA_BOOTSTRAP_SERVERS=redpanda:9092
+      - TAX_SERVICE_URL=http://tax:4567/tax/calc
+    depends_on:
+      - redpanda
+    networks:
+      - internal
+
+  redpanda:
+    image: redpandadata/redpanda:v25.2.4
+    command:
+      - redpanda
+      - start
+      - --overprovisioned
+      - --smp
+      - "1"
+      - --memory
+      - 1024M
+      - --reserve-memory
+      - 0M
+      - --node-id
+      - "0"
+      - --check=false
+      # Kafka listener and advertised address for Docker network
+      - --kafka-addr
+      - PLAINTEXT://0.0.0.0:9092
+      - --advertise-kafka-addr
+      - PLAINTEXT://redpanda:9092
+      - --rpc-addr
+      - 0.0.0.0:33145
+      - --advertise-rpc-addr
+      - redpanda:33145
+    expose:
+      - "9092"
+    networks:
+      - internal
+
+networks:
+  internal:
+    driver: bridge
