@@ -5,6 +5,8 @@ import com.groupon.orders.kafka.PaymentPublisher;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.http.ResponseEntity;
 import java.util.HashMap;
@@ -12,8 +14,12 @@ import java.util.Map;
 
 @Service
 public class OrderService {
+    private static final Logger log = LoggerFactory.getLogger(OrderService.class);
     @Value("${TAX_SERVICE_URL}")
     private String taxServiceUrl;
+
+    @Value("${APP_ENV:development}")
+    private String appEnv;
 
     @Autowired
     private PaymentPublisher paymentPublisher;
@@ -38,6 +44,11 @@ public class OrderService {
             ResponseEntity<Map> response = restTemplate.postForEntity(taxServiceUrl + "/tax/calc", taxPayload, Map.class);
             taxAmount = (Double) response.getBody().get("taxAmount");
         } catch (Exception e) {
+            if ("production".equalsIgnoreCase(appEnv)) {
+                log.warn("TaxService call failed: {}", e.getMessage());
+            } else {
+                log.error("TaxService call failed", e);
+            }
             // Fallback tax logic
             taxAmount = 10.0; // Flat rate fallback
             fallback = true;
