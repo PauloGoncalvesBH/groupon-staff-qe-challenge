@@ -1,0 +1,11 @@
+FROM gradle:8.5-jdk21
+
+WORKDIR /workspace
+
+COPY ./orders-java/build.gradle /workspace/
+
+RUN gradle --no-daemon dependencies
+
+COPY ./orders-java /workspace
+
+RUN gradle --no-daemon testClasses

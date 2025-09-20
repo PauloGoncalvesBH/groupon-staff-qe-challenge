@@ -33,18 +33,13 @@ tasks.withType(Test).configureEach {
     }
 }
 
-tasks.named('test') {
-    systemProperty 'pact.rootDir', new File(project.rootProject.projectDir.parentFile, 'pacts').absolutePath
-    systemProperty 'pact.writer.overwrite', 'true'
-}
-
 tasks.register('contractTest', Test) {
     description = 'Runs contract tests only'
     group = 'verification'
     useJUnitPlatform {
         includeTags 'contract'
     }
-    systemProperty 'pact.rootDir', new File(project.rootProject.projectDir.parentFile, 'pacts').absolutePath
+    systemProperty 'pact.rootDir', 'pacts'
     systemProperty 'pact.writer.overwrite', 'true'
     // systemProperty 'pact.logLevel', 'DEBUG'
     testClassesDirs = sourceSets.test.output.classesDirs

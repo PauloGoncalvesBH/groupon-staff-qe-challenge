@@ -14,15 +14,18 @@ services:
     networks:
       - internal
 
+  orders-test-base:
+    build:
+      context: .
+      dockerfile: orders-java/Dockerfile.test
+
   orders-contract-tests:
-    image: gradle:8.5-jdk21
-    working_dir: /workspace/orders-java
+    extends: orders-test-base
     command: gradle contractTest --no-daemon
     environment:
       - PACT_DO_NOT_TRACK=true
     volumes:
-      - ./:/workspace
-      - ${HOME}/.gradle:/home/gradle/.gradle
+      - ./pacts:/pacts
 
   redpanda:
     image: redpandadata/redpanda:v25.2.4
