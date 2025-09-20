@@ -2,7 +2,6 @@ package com.groupon.orders.service;
 
 import com.groupon.orders.api.OrderRequest;
 import com.groupon.orders.kafka.PaymentPublisher;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.slf4j.Logger;
@@ -15,22 +14,20 @@ import java.util.Map;
 @Service
 public class OrderService {
     private static final Logger log = LoggerFactory.getLogger(OrderService.class);
-    @Value("${TAX_SERVICE_URL}")
-    private String taxServiceUrl;
-
-    @Value("${APP_ENV:development}")
-    private String appEnv;
-
-    @Autowired
-    private PaymentPublisher paymentPublisher;
-
     private final RestTemplate restTemplate;
+    private final PaymentPublisher paymentPublisher;
+    private final String taxServiceUrl;
+    private final String appEnv;
 
-    public OrderService() {
-        var factory = new org.springframework.http.client.SimpleClientHttpRequestFactory();
-        factory.setConnectTimeout(3000);
-        factory.setReadTimeout(3000); 
-        this.restTemplate = new RestTemplate(factory);
+    public OrderService(
+            RestTemplate restTemplate,
+            PaymentPublisher paymentPublisher,
+            @Value("${TAX_SERVICE_URL}") String taxServiceUrl,
+            @Value("${APP_ENV:development}") String appEnv) {
+        this.restTemplate = restTemplate;
+        this.paymentPublisher = paymentPublisher;
+        this.taxServiceUrl = taxServiceUrl;
+        this.appEnv = appEnv;
     }
 
     public Map<String, Object> processOrder(OrderRequest request) {
