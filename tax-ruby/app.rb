@@ -13,7 +13,6 @@ post '/tax/calc' do
     payload = JSON.parse(request.body.read)
     amount = payload['amount']
     currency = payload['currency']
-    user_id = payload['userId']
 
     halt 400, { error: 'amount is required' }.to_json unless amount
     halt 400, { error: 'currency is required' }.to_json unless currency

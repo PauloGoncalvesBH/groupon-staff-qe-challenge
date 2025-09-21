@@ -79,6 +79,15 @@ services:
     networks:
       - internal
 
+  tax-unit-tests:
+    build: ./tax-ruby
+    command: bundle exec rspec --options spec/.rspec
+    working_dir: /app
+    environment:
+      - RACK_ENV=test
+    volumes:
+      - ./tax-ruby/spec:/app/spec
+
 networks:
   internal:
     driver: bridge

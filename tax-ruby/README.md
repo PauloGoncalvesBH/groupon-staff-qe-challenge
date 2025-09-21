@@ -15,3 +15,17 @@ Minimal Tax calculation service for the challenge. Exposes POST /tax/calc that r
   - Response JSON: { taxAmount }
 
 - GET /health → { status: 'ok', time }
+
+## Testes unitários
+
+Execute com Makefile (recomendado):
+
+```bash
+make tax-test-unit
+```
+
+Ou diretamente via Docker Compose:
+
+```bash
+docker compose run --rm --profile test tax-unit-tests
+```

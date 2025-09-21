@@ -1,4 +1,4 @@
-FROM gradle:8.5-jdk21 AS builder
+FROM gradle:8.5-jdk21@sha256:873def2b8a73d00f5616043ac9ff65576b055942701391ad66499f1a1f53f1b2 AS builder
 # Stage 1: Build the application using Gradle
 WORKDIR /build
 
