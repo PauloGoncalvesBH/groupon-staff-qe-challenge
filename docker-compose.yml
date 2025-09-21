@@ -18,6 +18,8 @@ services:
     build:
       context: .
       dockerfile: orders-java/Dockerfile.test
+    volumes:
+      - ./orders-java/src/test:/workspace/src/test
 
   orders-contract-tests:
     extends: orders-test-base
@@ -26,6 +28,10 @@ services:
       - PACT_DO_NOT_TRACK=true
     volumes:
       - ./pacts:/pacts
+
+  orders-unit-tests:
+    extends: orders-test-base
+    command: gradle unitTest --no-daemon
 
   redpanda:
     image: redpandadata/redpanda:v25.2.4

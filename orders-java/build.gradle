@@ -33,6 +33,20 @@ tasks.withType(Test).configureEach {
     }
 }
 
+tasks.register('unitTest', Test) {
+    description = 'Runs unit tests only'
+    group = 'verification'
+    useJUnitPlatform {
+        includeTags 'unit'
+    }
+    testLogging {
+        events 'passed', 'skipped', 'failed'
+        showStandardStreams = false
+    }
+    testClassesDirs = sourceSets.test.output.classesDirs
+    classpath = sourceSets.test.runtimeClasspath
+}
+
 tasks.register('contractTest', Test) {
     description = 'Runs contract tests only'
     group = 'verification'
