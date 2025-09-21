@@ -45,26 +45,33 @@ class OrderServiceTest {
     @DisplayName("Given valid order and Tax OK, when processing, then publishes and returns success")
     void givenValidOrderAndTaxOk_whenProcessingOrder_thenPublishesAndReturnsSuccess() {
         // Given
+        String orderId = "o-1";
+        double amount = 100.0;
+        String currency = "USD";
+        double expectedTax = 8.0;
         when(restTemplate.postForEntity(anyString(), any(Map.class), eq(Map.class)))
-            .thenReturn(ResponseEntity.ok(Map.of("taxAmount", 8.0)));
+            .thenReturn(ResponseEntity.ok(Map.of("taxAmount", expectedTax)));
 
         // When
         var result = service.processOrder(buildRequest());
 
         // Then
-        assertEquals("o-1", result.get("orderId"));
+        assertEquals(orderId, result.get("orderId"));
         assertEquals("success", result.get("status"));
-        assertEquals(8.0, (Double) result.get("taxAmount"));
+        assertEquals(expectedTax, (Double) result.get("taxAmount"));
 
         // And publishes once with correct args
         verify(publisher, times(1))
-            .publishPaymentStatusUpdated(eq("o-1"), eq("success"));
+            .publishPaymentStatusUpdated(eq(orderId), eq("success"), eq(amount), eq(expectedTax));
     }
 
     @Test
     @DisplayName("Given Tax service fails, when processing, then uses fallback and does not publish")
     void givenTaxServiceFails_whenProcessingOrder_thenUsesFallbackAndDoesNotPublish() {
         // Given: simulate error calling tax
+        String orderId = "o-1";
+        double amount = 100.0;
+        double fallbackTax = 10.0;
         when(restTemplate.postForEntity(anyString(), any(Map.class), eq(Map.class)))
             .thenThrow(new RuntimeException("random failure"));
 
@@ -72,9 +79,9 @@ class OrderServiceTest {
         var result = service.processOrder(buildRequest());
 
         // Then fallback is applied
-        assertEquals("o-1", result.get("orderId"));
+        assertEquals(orderId, result.get("orderId"));
         assertEquals("fallback", result.get("status"));
-        assertEquals(10.0, (Double) result.get("taxAmount"));
+        assertEquals(fallbackTax, (Double) result.get("taxAmount"));
         // And no publish on kafka
         verifyNoInteractions(publisher);
     }
@@ -83,15 +90,17 @@ class OrderServiceTest {
     @DisplayName("Given Tax service returns non-Double, when processing, then uses fallback and does not publish")
     void givenTaxServiceReturnsNonDouble_whenProcessingOrder_thenUsesFallbackAndDoesNotPublish() {
         // Given: tax return wrong type (Integer instead of Double)
+        int wrongTaxAsInt = 8;
+        double fallbackTax = 10.0;
         when(restTemplate.postForEntity(anyString(), any(Map.class), eq(Map.class)))
-            .thenReturn(ResponseEntity.ok(Map.of("taxAmount", Integer.valueOf(8))));
+            .thenReturn(ResponseEntity.ok(Map.of("taxAmount", Integer.valueOf(wrongTaxAsInt))));
 
         // When
         var result = service.processOrder(buildRequest());
 
         // Then fallback is applied
         assertEquals("fallback", result.get("status"));
-        assertEquals(10.0, (Double) result.get("taxAmount"));
+        assertEquals(fallbackTax, (Double) result.get("taxAmount"));
         // And no publish on kafka
         verifyNoInteractions(publisher);
     }

@@ -52,7 +52,12 @@ public class OrderService {
         }
         // Publish event to Kafka only if TaxService succeeded
         if (!fallback) {
-            paymentPublisher.publishPaymentStatusUpdated(request.getOrderId(), "success");
+            paymentPublisher.publishPaymentStatusUpdated(
+                request.getOrderId(),
+                "success",
+                request.getAmount(),
+                taxAmount
+            );
         }
         Map<String, Object> result = new HashMap<>();
         result.put("orderId", request.getOrderId());

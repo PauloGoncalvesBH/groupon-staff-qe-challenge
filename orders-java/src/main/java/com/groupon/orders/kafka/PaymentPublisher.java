@@ -21,11 +21,13 @@ public class PaymentPublisher {
         this.kafkaTemplate = kafkaTemplate;
     }
 
-    public void publishPaymentStatusUpdated(String orderId, String status) {
+    public void publishPaymentStatusUpdated(String orderId, String status, Double amount, Double taxAmount) {
         Map<String, Object> event = new HashMap<>();
         event.put("orderId", orderId);
         event.put("status", status);
         event.put("provider", paymentProvider);
+        event.put("amount", amount);
+        event.put("taxAmount", taxAmount);
         event.put("occurredAt", Instant.now().toString());
         kafkaTemplate.send("payments.status.updated", orderId, event);
     }
