@@ -2,6 +2,7 @@ FROM ruby:3.2-alpine AS base
 ENV APP_HOME=/app
 WORKDIR $APP_HOME
 
+# hadolint ignore=DL3018
 RUN apk add --no-cache build-base curl
 
 COPY Gemfile* ./
