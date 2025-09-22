@@ -1,0 +1,55 @@
+name: Continuous Integration - Tax service
+
+on:
+  push:
+    paths:
+      - 'tax-ruby/**'
+      - 'docker-compose.yml'
+      - 'Makefile'
+      - '.github/workflows/tax-ruby.yml'
+  pull_request:
+    paths:
+      - 'tax-ruby/**'
+      - 'docker-compose.yml'
+      - 'Makefile'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: tax-ruby-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  dockerfile-lint:
+    name: Dockerfile lint (hadolint)
+    runs-on: ubuntu-24.04
+    steps:
+      - name: Project checkout
+        uses: actions/checkout@v4
+      - name: Validate tax-ruby Dockerfile
+        run: docker run --rm -i hadolint/hadolint < tax-ruby/Dockerfile
+
+  build:
+    name: Build tax image
+    runs-on: ubuntu-24.04
+    timeout-minutes: 15
+    steps:
+      - name: Project checkout
+        uses: actions/checkout@v4
+      - name: Build tax image
+        run: docker compose build tax
+
+  unit-tests:
+    name: Unit tests
+    runs-on: ubuntu-24.04
+    needs: [build]
+    timeout-minutes: 20
+    steps:
+      - name: Project checkout
+        uses: actions/checkout@v4
+      - name: Build unit test image
+        run: docker compose build tax-unit-tests
+      - name: Run unit tests
+        run: docker compose run --rm --profile test tax-unit-tests

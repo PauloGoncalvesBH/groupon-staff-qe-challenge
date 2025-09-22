@@ -1,0 +1,74 @@
+name:  Continuous Integration - Orders service
+
+on:
+  push:
+    paths:
+      - 'orders-java/**'
+      - 'docker-compose.yml'
+      - 'Makefile'
+      - '.github/workflows/orders-java.yml'
+  pull_request:
+    paths:
+      - 'orders-java/**'
+      - 'docker-compose.yml'
+      - 'Makefile'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: orders-java-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  dockerfile-lint:
+    name: Dockerfile lint (hadolint)
+    runs-on: ubuntu-24.04
+    steps:
+      - name: Project checkout
+        uses: actions/checkout@v4
+      - name: Validate orders-java production Dockerfile
+        run: docker run --rm -i hadolint/hadolint < orders-java/Dockerfile
+      - name: Validate orders-java test Dockerfile
+        run: docker run --rm -i hadolint/hadolint < orders-java/Dockerfile.test
+
+  build:
+    name: Build orders image
+    runs-on: ubuntu-24.04
+    timeout-minutes: 15
+    steps:
+      - name: Project checkout
+        uses: actions/checkout@v4
+      - name: Build orders image
+        run: docker compose build orders
+
+  unit-tests:
+    name: Unit tests
+    runs-on: ubuntu-24.04
+    needs: [build]
+    timeout-minutes: 15
+    steps:
+      - name: Project checkout
+        uses: actions/checkout@v4
+      - run: docker compose build orders-unit-tests
+      - name: Run unit tests
+        run: docker compose run --rm orders-unit-tests
+
+  contract-tests:
+    name: Contract tests
+    runs-on: ubuntu-24.04
+    needs: [build]
+    timeout-minutes: 25
+    steps:
+      - name: Project checkout
+        uses: actions/checkout@v4
+      - run: docker compose build orders-contract-tests
+      - name: Run contract tests
+        run: docker compose run --rm orders-contract-tests
+      - name: Upload Pact files
+        uses: actions/upload-artifact@v4
+        with:
+          name: pacts
+          path: pacts/**
+          if-no-files-found: warn
