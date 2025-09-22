@@ -53,9 +53,9 @@ tasks.register('contractTest', Test) {
     useJUnitPlatform {
         includeTags 'contract'
     }
-    systemProperty 'pact.rootDir', 'pacts'
+    systemProperty 'pact.rootDir', '/pacts'
     systemProperty 'pact.writer.overwrite', 'true'
-    // systemProperty 'pact.logLevel', 'DEBUG'
+    systemProperty 'pact.logLevel', 'DEBUG'
     testClassesDirs = sourceSets.test.output.classesDirs
     classpath = sourceSets.test.runtimeClasspath
     // Always run to regenerate pact files (avoid Gradle up-to-date skipping)

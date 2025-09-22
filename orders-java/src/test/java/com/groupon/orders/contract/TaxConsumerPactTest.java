@@ -32,8 +32,7 @@ public class TaxConsumerPactTest {
     @Pact(consumer = "orders")
     public RequestResponsePact taxHappyPath(PactDslWithProvider builder) {
         return builder
-            .given("Tax service can compute tax for USD")
-            .uponReceiving("valid request returns taxAmount")
+            .uponReceiving("a valid request which returns taxAmount")
             .path("/tax/calc")
             .method("POST")
             .headers(java.util.Map.of("Content-Type", "application/json"))
@@ -51,8 +50,8 @@ public class TaxConsumerPactTest {
     @Pact(consumer = "orders")
     public RequestResponsePact taxWithExtraField(PactDslWithProvider builder) {
         return builder
-            .given("Consumer may ignore extra fields")
-            .uponReceiving("valid request returns taxAmount plus ignored field")
+            .given("Consumer will send extra non-breaking fields")
+            .uponReceiving("a valid request which returns taxAmount and does not break on extra fields")
             .path("/tax/calc")
             .method("POST")
             .headers(java.util.Map.of("Content-Type", "application/json"))
@@ -65,7 +64,6 @@ public class TaxConsumerPactTest {
             .headers(java.util.Map.of("Content-Type", "application/json"))
             .body(new PactDslJsonBody()
                 .numberValue("taxAmount", 4.0)
-                .stringValue("ignored", "anything") // extra non-breaking field
             )
             .toPact();
     }

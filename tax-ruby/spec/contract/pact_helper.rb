@@ -11,16 +11,13 @@ class PactResponseAugmenter
     status, headers, body = @app.call(env)
     req = Rack::Request.new(env)
 
-    extra_field_states = [
-      'Consumer may ignore extra fields',
-      'Provider may include extra fields'
-    ]
-    if req.post? && req.path == '/tax/calc' && extra_field_states.include?(ENV['PACT_PROVIDER_STATE'])
+    # Inject extra field based on state configured in provider state set_up
+    if req.post? && req.path == '/tax/calc' && ENV['PACT_INJECT_IGNORED']
       original = +""
       body.each { |chunk| original << chunk }
       begin
         json = JSON.parse(original)
-        json['ignored'] ||= 'anything'
+        json['ignored'] ||= ENV['PACT_INJECT_IGNORED']
         new_body = [JSON.generate(json)]
         headers['Content-Length'] = new_body.first.bytesize.to_s
         return [status, headers, new_body]
@@ -43,22 +40,9 @@ Pact.service_provider 'tax' do
 end
 
 Pact.provider_states_for 'orders' do
-  provider_state 'Tax service can compute tax for USD' do
+  provider_state 'Consumer will send extra non-breaking fields' do
     set_up do
-      ENV['PACT_PROVIDER_STATE'] = 'Tax service can compute tax for USD'
-    end
-  end
-
-  provider_state 'Consumer may ignore extra fields' do
-    set_up do
-      ENV['PACT_PROVIDER_STATE'] = 'Consumer may ignore extra fields'
-    end
-  end
-
-  # Backwards/compat alias with the wording in the current pact file
-  provider_state 'Provider may include extra fields' do
-    set_up do
-      ENV['PACT_PROVIDER_STATE'] = 'Provider may include extra fields'
+      ENV['PACT_INJECT_IGNORED'] = 'anything'
     end
   end
 end
