@@ -53,7 +53,7 @@ jobs:
         uses: actions/checkout@v4
       - run: docker compose build orders-unit-tests
       - name: Run unit tests
-        run: docker compose run --rm orders-unit-tests
+        run: make orders-test-unit
 
   contract-tests:
     name: Contract tests
@@ -65,7 +65,7 @@ jobs:
         uses: actions/checkout@v4
       - run: docker compose build orders-contract-tests
       - name: Run contract tests
-        run: docker compose run --rm orders-contract-tests
+        run: make orders-test-contract
       - name: Upload Pact files
         uses: actions/upload-artifact@v4
         with:

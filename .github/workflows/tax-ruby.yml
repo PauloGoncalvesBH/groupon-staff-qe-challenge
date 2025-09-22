@@ -52,4 +52,4 @@ jobs:
       - name: Build unit test image
         run: docker compose build tax-unit-tests
       - name: Run unit tests
-        run: docker compose run --rm --profile test tax-unit-tests
+        run: make tax-test-unit
