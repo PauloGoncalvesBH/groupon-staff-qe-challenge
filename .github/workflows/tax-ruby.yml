@@ -53,3 +53,15 @@ jobs:
         run: docker compose build tax-unit-tests
       - name: Run unit tests
         run: make tax-test-unit
+
+  contract-tests:
+    name: Contract tests - Provider
+    runs-on: ubuntu-24.04
+    needs: [build]
+    timeout-minutes: 20
+    steps:
+      - name: Project checkout
+        uses: actions/checkout@v4
+      - run: docker compose build tax-contract-tests
+      - name: Run contract tests
+        run: make tax-test-contract

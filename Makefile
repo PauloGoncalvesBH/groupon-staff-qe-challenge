@@ -1,8 +1,4 @@
 
-.PHONY: build up down clean restart log ps \
-	orders-test orders-test-contract orders-test-unit orders-test-integration \
-	tax-test-unit
-
 build:
 	docker compose build orders
 
@@ -26,12 +22,7 @@ ps:
 # Tests
 
 orders-test: orders-test-contract orders-test-unit
-	@echo "\n========= All tests completed ========= "
-
-orders-test-contract:
-	@echo "========= [orders-java] Running contract tests =========\n"
-	docker compose run --rm orders-contract-tests
-	@echo "\n========= [orders-java] Contract tests completed ========= "
+	@echo "\n========= [orders-java] All tests completed ========= "
 
 orders-test-unit:
 	@echo "========= [orders-java] Running unit tests =========\n"
@@ -43,7 +34,20 @@ orders-test-integration:
 	docker compose run --rm orders-integration-tests
 	@echo "\n========= [orders-java] Integration tests completed ========= "
 
+orders-test-contract:
+	@echo "========= [orders-java] Running contract tests =========\n"
+	docker compose run --rm orders-contract-tests
+	@echo "\n========= [orders-java] Contract tests completed ========= "
+
+tax-test: tax-test-unit tax-test-contract
+	@echo "\n========= [tax-ruby] All tests completed ========= "
+
 tax-test-unit:
 	@echo "========= [tax-ruby] Running unit tests =========\n"
 	docker compose run --rm tax-unit-tests
 	@echo "\n========= [tax-ruby] Unit tests completed ========= "
+
+tax-test-contract:
+	@echo "========= [tax-ruby] Running provider contract tests =========\n"
+	docker compose run --rm tax-contract-tests
+	@echo "\n========= [tax-ruby] Provider contract tests completed ========= "

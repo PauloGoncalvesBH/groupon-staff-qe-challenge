@@ -38,36 +38,34 @@ public class TaxConsumerPactTest {
             .method("POST")
             .headers(java.util.Map.of("Content-Type", "application/json"))
             .body(new PactDslJsonBody()
-                .numberType("amount", 100.0)
-                .stringType("currency", "USD")
-                .stringType("userId", "user-abc")
+                .numberValue("amount", 100.0)
+                .stringValue("currency", "USD")
             )
             .willRespondWith()
             .status(200)
             .headers(java.util.Map.of("Content-Type", "application/json"))
-            .body(new PactDslJsonBody().numberType("taxAmount", 10.0))
+            .body(new PactDslJsonBody().numberValue("taxAmount", 10.0))
             .toPact();
     }
 
     @Pact(consumer = "orders")
     public RequestResponsePact taxWithExtraField(PactDslWithProvider builder) {
         return builder
-            .given("Provider may include extra fields")
+            .given("Consumer may ignore extra fields")
             .uponReceiving("valid request returns taxAmount plus ignored field")
             .path("/tax/calc")
             .method("POST")
             .headers(java.util.Map.of("Content-Type", "application/json"))
             .body(new PactDslJsonBody()
-                .numberType("amount", 50.0)
-                .stringType("currency", "BRL")
-                .stringType("userId", "user-xyz")
+                .numberValue("amount", 50.0)
+                .stringValue("currency", "BRL")
             )
             .willRespondWith()
             .status(200)
             .headers(java.util.Map.of("Content-Type", "application/json"))
             .body(new PactDslJsonBody()
-                .numberType("taxAmount", 4.0)
-                .stringType("ignored", "anything") // extra non-breaking field
+                .numberValue("taxAmount", 4.0)
+                .stringValue("ignored", "anything") // extra non-breaking field
             )
             .toPact();
     }
@@ -77,7 +75,7 @@ public class TaxConsumerPactTest {
     void verifyHappyPath(MockServer mockServer) {
         // Minimal client to hit mock server and assert body
         var client = java.net.http.HttpClient.newHttpClient();
-        var payload = "{\"amount\":100.0,\"currency\":\"USD\",\"userId\":\"user-abc\"}";
+        var payload = "{\"amount\":100.0,\"currency\":\"USD\"}";
         var req = java.net.http.HttpRequest.newBuilder()
             .uri(java.net.URI.create(mockServer.getUrl() + "/tax/calc"))
             .header("Content-Type", "application/json")
@@ -95,7 +93,7 @@ public class TaxConsumerPactTest {
     @PactTestFor(pactMethod = "taxWithExtraField")
     void verifyExtraFieldIsNonBreaking(MockServer mockServer) {
         var client = java.net.http.HttpClient.newHttpClient();
-        var payload = "{\"amount\":50.0,\"currency\":\"BRL\",\"userId\":\"user-xyz\"}";
+        var payload = "{\"amount\":50.0,\"currency\":\"BRL\"}";
         var req = java.net.http.HttpRequest.newBuilder()
             .uri(java.net.URI.create(mockServer.getUrl() + "/tax/calc"))
             .header("Content-Type", "application/json")

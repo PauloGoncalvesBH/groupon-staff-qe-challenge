@@ -56,7 +56,7 @@ jobs:
         run: make orders-test-unit
 
   contract-tests:
-    name: Contract tests
+    name: Contract tests - Consumer
     runs-on: ubuntu-24.04
     needs: [build]
     timeout-minutes: 25
