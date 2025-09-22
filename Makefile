@@ -18,7 +18,7 @@ ps:
 
 # Tests
 
-orders-test: orders-test-contract orders-test-unit
+orders-test: orders-test-contract orders-test-integration orders-test-unit
 	@echo "\n========= [orders-java] All tests completed ========= "
 
 orders-test-unit:

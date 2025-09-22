@@ -7,5 +7,3 @@ COPY ./orders-java/build.gradle /workspace/
 RUN gradle --no-daemon dependencies
 
 COPY ./orders-java /workspace
-
-RUN gradle --no-daemon testClasses
