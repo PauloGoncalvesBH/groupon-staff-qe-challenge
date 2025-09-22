@@ -69,6 +69,11 @@ Both services have **unit tests** and **Pact contract tests**. The Orders servic
 | **Tax**         | Unit          | `make tax-test-unit` |
 |             | Contract - Provider      | `make tax-test-contract` |
 
+To run all tests for a service, use:
+
+- Orders: `make orders-test`
+- Tax: `make tax-test`
+
 # Continuous Integration (CI)
 
 [![Continuous Integration - Orders service](https://github.com/PauloGoncalvesBH/groupon-staff-qe-challenge/actions/workflows/orders-java.yml/badge.svg)](https://github.com/PauloGoncalvesBH/groupon-staff-qe-challenge/actions/workflows/orders-java.yml) | [![Continuous Integration - Tax service](https://github.com/PauloGoncalvesBH/groupon-staff-qe-challenge/actions/workflows/tax-ruby.yml/badge.svg)](https://github.com/PauloGoncalvesBH/groupon-staff-qe-challenge/actions/workflows/tax-ruby.yml)

@@ -37,7 +37,11 @@ services:
     extends: orders-test-base
     command: gradle integrationTest --no-daemon
     environment:
-      - TESTCONTAINERS_HOST_OVERRIDE=host.docker.internal
+      - TESTCONTAINERS_HOST_OVERRIDE=${TESTCONTAINERS_HOST_OVERRIDE:-host.docker.internal}
+      - TESTCONTAINERS_RYUK_CONTAINER_PRIVILEGED=true
+      - TESTCONTAINERS_RYUK_DISABLED=true
+    privileged: true
+    network_mode: host
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock:ro
       - ./orders-java:/workspace:rw
