@@ -1,20 +1,17 @@
 
 build:
-	docker compose build orders
+	docker compose build
 
-up:
+start:
 	docker compose up --build orders
 
 down:
 	docker compose down
 
-restart: down up
+restart: down start
 
 clean:
 	docker system prune -f
-
-log:
-	docker compose logs --follow orders
 
 ps:
 	docker compose ps
