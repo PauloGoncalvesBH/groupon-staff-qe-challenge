@@ -59,7 +59,7 @@ jobs:
     name: Contract tests - Consumer
     runs-on: ubuntu-24.04
     needs: [build]
-    timeout-minutes: 25
+    timeout-minutes: 15
     steps:
       - name: Project checkout
         uses: actions/checkout@v4
@@ -72,3 +72,15 @@ jobs:
           name: pacts
           path: pacts/**
           if-no-files-found: warn
+
+  integration-tests:
+    name: Integration tests
+    runs-on: ubuntu-24.04
+    needs: [build]
+    timeout-minutes: 15
+    steps:
+      - name: Project checkout
+        uses: actions/checkout@v4
+      - run: docker compose build orders-integration-tests
+      - name: Run integration tests
+        run: make orders-test-integration

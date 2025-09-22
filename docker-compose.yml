@@ -33,6 +33,17 @@ services:
     extends: orders-test-base
     command: gradle unitTest --no-daemon
 
+  orders-integration-tests:
+    extends: orders-test-base
+    command: gradle integrationTest --no-daemon
+    environment:
+      - TESTCONTAINERS_HOST_OVERRIDE=host.docker.internal
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock:ro
+      - ./orders-java:/workspace:rw
+    # extra_hosts:
+    #   - "host.docker.internal:host-gateway"
+
   redpanda:
     image: redpandadata/redpanda:v25.2.4
     command:

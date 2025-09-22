@@ -45,7 +45,7 @@ jobs:
     name: Unit tests
     runs-on: ubuntu-24.04
     needs: [build]
-    timeout-minutes: 20
+    timeout-minutes: 15
     steps:
       - name: Project checkout
         uses: actions/checkout@v4
@@ -58,7 +58,7 @@ jobs:
     name: Contract tests - Provider
     runs-on: ubuntu-24.04
     needs: [build]
-    timeout-minutes: 20
+    timeout-minutes: 15
     steps:
       - name: Project checkout
         uses: actions/checkout@v4

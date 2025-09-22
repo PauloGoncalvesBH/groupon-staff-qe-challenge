@@ -21,6 +21,9 @@ dependencies {
     implementation 'org.springframework.boot:spring-boot-starter-actuator'
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
     testImplementation 'au.com.dius.pact.consumer:junit5:4.6.15'
+    testImplementation 'org.testcontainers:junit-jupiter:1.19.7'
+    testImplementation 'org.testcontainers:kafka:1.19.7'
+    testImplementation 'com.github.tomakehurst:wiremock-jre8-standalone:2.35.1'
     testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
 }
 
@@ -59,5 +62,20 @@ tasks.register('contractTest', Test) {
     testClassesDirs = sourceSets.test.output.classesDirs
     classpath = sourceSets.test.runtimeClasspath
     // Always run to regenerate pact files (avoid Gradle up-to-date skipping)
+    outputs.upToDateWhen { false }
+}
+
+tasks.register('integrationTest', Test) {
+    description = 'Runs integration tests only'
+    group = 'verification'
+    useJUnitPlatform {
+        includeTags 'integration'
+    }
+    testLogging {
+        events 'passed', 'skipped', 'failed'
+        showStandardStreams = false
+    }
+    testClassesDirs = sourceSets.test.output.classesDirs
+    classpath = sourceSets.test.runtimeClasspath
     outputs.upToDateWhen { false }
 }
