@@ -1,5 +1,5 @@
 require 'pact/provider/rspec'
-require_relative '../app'
+require_relative '../../app'
 require 'json'
 
 class PactResponseAugmenter
@@ -32,7 +32,7 @@ class PactResponseAugmenter
   end
 end
 
-PACT_PATH = File.expand_path('../pacts/orders-tax.json', __dir__)
+PACT_PATH = File.expand_path('../../pacts/orders-tax.json', __dir__)
 
 Pact.service_provider 'tax' do
   app { PactResponseAugmenter.new(Sinatra::Application) }

@@ -3,7 +3,7 @@
 require 'spec_helper'
 require 'json'
 
-RSpec.describe 'Health endpoint' do
+RSpec.describe 'Health endpoint', :unit do
   it 'returns ok' do
     get '/health'
     expect(last_response.status).to eq 200

@@ -81,21 +81,17 @@ services:
 
   tax-unit-tests:
     build: ./tax-ruby
-    command: bundle exec rspec --options spec/.rspec --tag ~contract
+    command: bundle exec rspec --options spec/.rspec spec/unit
     working_dir: /app
-    environment:
-      - RACK_ENV=test
     volumes:
       - ./tax-ruby/spec:/app/spec
-      - ./pacts:/app/pacts:ro
 
   tax-contract-tests:
     build: ./tax-ruby
     command: bundle exec rake pact:verify
     working_dir: /app
     environment:
-      - RACK_ENV=test
-      - PACT_LOG_LEVEL=ERROR
+      - VERBOSE=true
       - PACT_DO_NOT_TRACK=true
     depends_on:
       tax:
@@ -103,8 +99,6 @@ services:
     volumes:
       - ./tax-ruby/spec:/app/spec
       - ./pacts:/app/pacts:ro
-    networks:
-      - internal
 
 networks:
   internal:

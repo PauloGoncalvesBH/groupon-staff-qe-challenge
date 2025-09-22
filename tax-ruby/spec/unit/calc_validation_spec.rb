@@ -3,7 +3,7 @@
 require 'spec_helper'
 require 'json'
 
-RSpec.describe 'POST /tax/calc - validations' do
+RSpec.describe 'POST /tax/calc - validations', :unit do
   def post_json(body)
     post '/tax/calc', body.to_json, { 'CONTENT_TYPE' => 'application/json' }
   end

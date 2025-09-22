@@ -3,7 +3,7 @@
 require 'spec_helper'
 require 'json'
 
-RSpec.describe 'POST /tax/calc - success paths' do
+RSpec.describe 'POST /tax/calc - success paths', :unit do
   it 'returns 10% tax for USD' do
     payload = { amount: 100.0, currency: 'USD' }.to_json
     post '/tax/calc', payload, { 'CONTENT_TYPE' => 'application/json' }
