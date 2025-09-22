@@ -11,7 +11,7 @@ Minimal Tax calculation service for the challenge. Exposes POST /tax/calc that r
 ## Endpoints
 
 - POST /tax/calc
-  - Request JSON: { amount, currency, userId }
+  - Request JSON: { amount, currency }
   - Response JSON: { taxAmount }
 
 - GET /health → { status: 'ok', time }

@@ -37,7 +37,6 @@ public class OrderService {
             Map<String, Object> taxPayload = new HashMap<>();
             taxPayload.put("amount", request.getAmount());
             taxPayload.put("currency", request.getCurrency());
-            taxPayload.put("userId", request.getUserId());
             ResponseEntity<Map> response = restTemplate.postForEntity(taxServiceUrl + "/tax/calc", taxPayload, Map.class);
             taxAmount = (Double) response.getBody().get("taxAmount");
         } catch (Exception e) {
