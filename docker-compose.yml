@@ -19,7 +19,7 @@ services:
       context: .
       dockerfile: orders-java/Dockerfile.test
     volumes:
-      - ./orders-java/src/test:/workspace/src/test
+      - ./orders-java/src/test:/workspace/src/test:ro
 
   orders-contract-tests:
     extends: orders-test-base
@@ -27,7 +27,7 @@ services:
     environment:
       - PACT_DO_NOT_TRACK=true
     volumes:
-      - ./pacts:/pacts
+      - ./pacts:/pacts:rw
 
   orders-unit-tests:
     extends: orders-test-base
@@ -84,7 +84,7 @@ services:
     command: bundle exec rspec --options spec/.rspec spec/unit
     working_dir: /app
     volumes:
-      - ./tax-ruby/spec:/app/spec
+      - ./tax-ruby/spec:/app/spec:ro
 
   tax-contract-tests:
     build: ./tax-ruby
@@ -97,7 +97,7 @@ services:
       tax:
         condition: service_healthy
     volumes:
-      - ./tax-ruby/spec:/app/spec
+      - ./tax-ruby/spec:/app/spec:ro
       - ./pacts:/app/pacts:ro
 
 networks:
