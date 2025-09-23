@@ -50,6 +50,7 @@ The topic will be published to Kafka/Redpanda only if  `POST /orders` is success
 ### Continuous Integration (CI)
 
 1. Add docker caching to the CI workflows to speed up build times.
+1. Add unit test and integration test result as artifact.
 
 ### Monitoring
 
