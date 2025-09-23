@@ -38,8 +38,12 @@ The topic will be published to Kafka/Redpanda only if  `POST /orders` is success
 1. Implement input validation and sanitization to prevent common security vulnerabilities (e.g., SQL injection, XSS).
 1. Remove fingerprinting information (e.g., server version) from HTTP headers.
 1. Apply patch updates for base images.
+1. (orders-java) Add action `dependency-submission` to receive Dependabot alerts for potentially vulnerable direct and transitive dependencies.
 
-> More details: [API Security Best Practices](https://github.com/shieldfy/API-Security-Checklist) and [OWASP - REST Security Cheat Sheet](https://cheatsheetseries.owasp.org/cheatsheets/REST_Security_Cheat_Sheet.html)
+> More details:
+> 1. [OWASP - REST Security Cheat Sheet](https://cheatsheetseries.owasp.org/cheatsheets/REST_Security_Cheat_Sheet.html)
+> 2. [API Security Best Practices](https://github.com/shieldfy/API-Security-Checklist)
+> 3. [dependency-submission action](https://github.com/marketplace/actions/build-with-gradle#the-dependency-submission-action)
 
 ### Quality / Maintainability
 
@@ -47,10 +51,13 @@ The topic will be published to Kafka/Redpanda only if  `POST /orders` is success
 1. Add linters/formatters.
 1. Adopt pact-broker to manage contracts between services.
 
-### Continuous Integration (CI)
+### Continuous Integration (CI) / Build
 
 1. Add docker caching to the CI workflows to speed up build times.
 1. Add unit test and integration test result as artifact.
+1. (orders-java) Enable configuration cache to improve build performance. [Gradle - Configuration cache](https://docs.gradle.org/8.5/userguide/configuration_cache.html)
+    - If the result is not successful, upgrade Gradle tov 9.0.0 (Code is already prepared to support it). [Gradle 9 release notes - Configuration cache improvements](https://docs.gradle.org/9.0.0/release-notes.html#config-cache)
+
 
 ### Monitoring
 
