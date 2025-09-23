@@ -57,5 +57,6 @@ The topic will be published to Kafka/Redpanda only if  `POST /orders` is success
 
 ### Business requirements
 
+1. Map the requirements for orders services (e.g., response schema).
 1. Map the requirements to calculate tax (e.g., different tax rates based on item type, etc.).
 1. Map how the topic `payments.status.updated` will be used by other services to define the event schema and required fields.
