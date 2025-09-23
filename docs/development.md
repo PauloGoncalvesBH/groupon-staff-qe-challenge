@@ -39,7 +39,9 @@ Execute the following command:
   make start
 ```
 
-> **Note:** This command will execute `orders-java` on port `8080` and trigger . The `tax-ruby` and `redpanda` services run within Docker Compose only and are not exposed to the host machine.
+> **Notes:**
+> - This command will execute `orders-java` on port `8080` and trigger `tax-ruby` and `redpanda` services. 
+> - `tax-ruby` and `redpanda` services run within Docker Compose only and are not exposed to the host machine.
 
 ## Docker
 
