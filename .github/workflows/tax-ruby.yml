@@ -7,11 +7,13 @@ on:
       - 'docker-compose.yml'
       - 'Makefile'
       - '.github/workflows/tax-ruby.yml'
+      - 'pacts/*-tax.json'
   pull_request:
     paths:
       - 'tax-ruby/**'
       - 'docker-compose.yml'
       - 'Makefile'
+      - 'pacts/*-tax.json'
   workflow_dispatch:
 
 permissions:
