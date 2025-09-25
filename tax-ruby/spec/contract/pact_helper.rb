@@ -29,7 +29,7 @@ class PactResponseAugmenter
   end
 end
 
-PACT_PATH = File.expand_path('../../pacts/orders-tax.json', __dir__)
+PACT_PATH = ENV.fetch('PACT_FILE')
 
 Pact.service_provider 'tax' do
   app { PactResponseAugmenter.new(Sinatra::Application) }

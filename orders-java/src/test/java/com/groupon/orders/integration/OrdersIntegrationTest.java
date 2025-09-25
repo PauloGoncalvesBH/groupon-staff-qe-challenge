@@ -114,6 +114,9 @@ class OrdersIntegrationTest {
             assertEquals("int-123", event.get("orderId"));
             assertEquals("success", event.get("status"));
             assertEquals(7.5, ((Number) event.get("taxAmount")).doubleValue(), 0.0001);
+
+            // And: Tax stub should have been called exactly once
+            taxStub.verify(1, postRequestedFor(urlEqualTo("/tax/calc")));
         }
     }
 
@@ -170,6 +173,9 @@ class OrdersIntegrationTest {
                 }
             }
             assertFalse(found, "Did not expect a message for orderId=" + orderId + " when Tax failed");
+
+            // And: Tax stub should have been called exactly once even on failure
+            taxStub.verify(1, postRequestedFor(urlEqualTo("/tax/calc")));
         }
     }
 }

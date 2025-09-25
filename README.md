@@ -50,6 +50,7 @@ The topic will be published to Kafka/Redpanda only if  `POST /orders` is success
 1. Add code analysis tools (e.g., SonarQube) to enforce coding standards and detect code smells.
 1. Add linters/formatters.
 1. Adopt pact-broker to manage contracts between services.
+1. Implement contract tests for the Kafka event `payments.status.updated` after the development of the event consumer aplication > [Pact JVM - Example Java Kafka Consumer](https://github.com/pactflow/example-consumer-java-kafka)
 
 ### Continuous Integration (CI) / Build
 

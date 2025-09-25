@@ -77,5 +77,6 @@ tasks.register('integrationTest', Test) {
     }
     testClassesDirs = sourceSets.test.output.classesDirs
     classpath = sourceSets.test.runtimeClasspath
+    // Review the use of the following line that forces the task to always run
     outputs.upToDateWhen { false }
 }
