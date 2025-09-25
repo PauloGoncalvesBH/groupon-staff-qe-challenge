@@ -109,9 +109,6 @@ services:
       - VERBOSE=true
       - PACT_DO_NOT_TRACK=true
       - PACT_FILE=/app/pacts/orders-tax.json
-    depends_on:
-      tax:
-        condition: service_healthy
     volumes:
       - ./tax-ruby/spec:/app/spec:ro
       - ./pacts:/app/pacts:ro
